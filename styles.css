@@ -1,0 +1,81 @@
+.box {
+  position: relative;
+  padding: 30px;
+  width: 500px;
+  height: 500px;
+  background-color: rebeccapurple;
+}
+.airplane {
+  position: absolute;
+  top: 300px;
+  left: 200px;
+  width: 100px;
+  height: 100px;
+  clip-path: polygon(
+    50% 0%, 54% 5%, 55% 25%, 98% 45%, 98% 55%,
+    55% 52%, 52% 73%, 62% 85%, 62% 88%, 50% 83%,
+    38% 88%, 38% 85%, 48% 73%, 45% 52%, 2% 55%,
+    2% 45%, 45% 25%, 46% 5%
+     );
+  background: red;
+   z-index: 2;
+   opacity: 1;
+   transition: opacity 0.2s;
+}
+.airplane.active {
+  opacity: 0;
+}
+
+.gun {
+  position: absolute;
+  top: 297px;
+  left: 247px;
+  height: 4px;
+  width: 5px;
+  background: black;
+  opacity: 1;
+}
+.gun.active {
+  opacity: 0;
+}
+.bullets {
+  position: absolute;
+  top: 290px;
+  left: 248px;
+  height: 6px;
+  width: 2px;
+  background: rgb(244, 241, 241); 
+}
+.obstacle {
+  position: absolute;
+  top: -30px;
+  left: 35px;
+  height: 30px;
+  width: 30px;
+  background-color: rgb(216, 225, 43);
+} 
+.d-inline {
+  position: relative;
+  left: 100px;
+  top: 300px;
+}
+.explosion {
+position:absolute;
+width: 50px;
+height: 50px;
+background: rgb(237, 211, 18);
+border-radius: 50%;
+box-shadow: 0 0 20px rgb(16, 226, 16),
+0 0 40px rgb(127, 153, 127),
+0 0 60px rgb(127, 153, 127),
+0 0 80px rgb(127, 153, 127),
+0 0 120px rgb(127, 153, 127),
+0 0 220px rgb(127, 153, 127),
+0 0 320px rgb(127, 153, 127);
+transition: box-shadow 2s;
+opacity: 0; 
+transition: opacity 0.2s;
+}
+.explosion.active  {
+opacity: 1;
+}
