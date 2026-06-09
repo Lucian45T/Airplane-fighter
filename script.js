@@ -6,7 +6,7 @@ let explosionX = planeX + 25;
 let explosionY = planeY + 25;
 const speed = 10;
 let hit = 0, saved = 0, verify = 0;
-let numberObstacles = 0, numberPassObstacles = 0;
+let numberObstacles = 0, numberPassObstacles = 0, numberGeneratedObstacle = 0;
 Explosion.style.left = explosionX + "px";
 Explosion.style.top = explosionY + "px"; 
 
@@ -21,7 +21,6 @@ document.addEventListener("keydown", (e) => {
   }
 });
 
-let copyObstacleY, copyObstacleX;
 let seconds = 0;   
 let myInterval = null;
  
@@ -52,20 +51,21 @@ var obstaclePositions = [35, 105, 180,
   250, 320, 390, 435];
 var speedFall = [10, 15, 25, 20, 7];   
 
-function fall(name, obstacleY, intervalId, differentSpeed) {
+function fall(name, obstacleY, intervalId, differentSpeed, copyObstacleX) {
   if (hit !== 0) return;
   if (obstacleY.value < 500) {
-    obstacleY.value += differentSpeed;
+    obstacleY.value += differentSpeed;  
     name.style.top = obstacleY.value + "px";
-    copyObstacleY = obstacleY.value; 
+    copyObstacleY = obstacleY.value;
+    collisionObstacles(copyObstacleX, obstacleY.value);
   }
   if (obstacleY.value >= 480) {
     clearInterval(intervalId);
-    name.remove();
-
+    name.remove(); 
+    ++numberPassObstacles;
+    document.getElementById("one").textContent = numberPassObstacles;
   }
-  collisionObstacles(copyObstacleX, copyObstacleY); 
-}
+} 
 
 function indexObstacle() { 
   if (hit !== 0) return;
@@ -76,7 +76,8 @@ function indexObstacle() {
   let random = Math.floor(Math.random() * 
   obstaclePositions.length); 
   numberObstacles = obstaclePositions[random];
-  copyObstacleX = numberObstacles;
+  ++numberGeneratedObstacle;
+  let copyObstacleXParameter = numberObstacles;
   Obstacle.style.left = numberObstacles + "px";
   Obstacle.style.top = "-30px";
   let obstacleY = {value:-30};
@@ -84,10 +85,10 @@ function indexObstacle() {
   let delay = Math.floor(Math.random() * speedFall.length);
   let differentSpeedFall = speedFall[delay];
   const intervalId = setInterval(() => fall(Obstacle, obstacleY,
-  intervalId, differentSpeedFall), 100);
+  intervalId, differentSpeedFall, copyObstacleXParameter), 100);
 }
-setInterval(indexObstacle, 2000);
-
+setInterval(indexObstacle, 2000);    
+ 
 const airplanePoints = [ [50, 0], [54, 5], [55, 25],
   [98, 45], [98, 55], [55, 52], [52, 73], [62, 85],   
   [62, 88], [50, 83], [38, 88], [38, 85], [48, 73], 
@@ -95,15 +96,13 @@ const airplanePoints = [ [50, 0], [54, 5], [55, 25],
 
 const airplanePoly = new SAT.Polygon( new SAT.Vector
   (planeX, planeY), airplanePoints.map(p => new 
-  SAT.Vector(p[0], p[1])) );
+  SAT.Vector(p[0], p[1])));
 
 function collisionObstacles(element1, element2) {
- console.log(copyObstacleX);
- console.log(copyObstacleY);
   let newObstacleX = element1;
   let newObstacleY = element2;
   let obstacleWidth = 30; 
-  let obstacleHeight = 30;
+  let obstacleHeight = 30;  
   const obstacle = new SAT.Box( new SAT.Vector
   (newObstacleX, newObstacleY),
   obstacleWidth,
@@ -118,14 +117,6 @@ function collisionObstacles(element1, element2) {
   const response = new SAT.Response(); 
   const collided = SAT.testPolygonPolygon(airplanePoly, 
   obstacle, response);
-  if (!collided) {
-    document.getElementById("two").textContent =
-      "the plane was not hit"; 
-  }
-  if (obstacle.pos.y == airplanePoly.pos.y + 100 && !collided) {
-    ++numberPassObstacles;
-  }
-  document.getElementById("one").textContent = numberPassObstacles; 
   if (collided) { 
     document.getElementById("two").textContent =
     "the plane was hit and the game is over";
